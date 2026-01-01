@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PTS System</title>
+<style>
+  body { background:#111; color:white; font-family:Arial; margin:0; }
+  nav { display:flex; background:#222; }
+  nav button { flex:1; padding:15px; background:#222; color:white; border:none; cursor:pointer; font-size:16px; }
+  nav button.active { background:#444; }
+  section { display:none; padding:20px; }
+  section.active { display:block; }
+  .pts {
+    background:#333; padding:10px; text-align:center; font-size:20px; margin-bottom:10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="pts">💰 Twoje PTS: <span id="ptsDisplay">0</span></div>
+
+<nav>
+  <button onclick="openTab('daily')">Daily Rewards</button>
+  <button onclick="openTab('missions')">Missions</button>
+  <button onclick="openTab('quiz')">Quiz</button>
+  <button onclick="openTab('redeem')">Redeem</button>
+  <button onclick="openTab('codes')">My Codes</button>
+</nav>
+
+<!-- DAILY REWARDS -->
+<section id="daily">
+  <h2>🎁 Daily Rewards</h2>
+  <p>Odbieraj nagrodę raz dziennie!</p>
+  <button onclick="dailyReward()">Odbierz nagrodę</button>
+  <p id="dailyInfo"></p>
+</section>
+
+<!-- MISSIONS -->
+<section id="missions">
+  <h2>🚀 Missions</h2>
+  <p>Wkrótce misje... (podamy szczegóły)</p>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <h2>🧠 Quiz</h2>
+  <p>Od razu dodamy pytania gdy podasz.</p>
+</section>
+
+<!-- REDEEM -->
+<section id="redeem">
+  <h2>🎟️ Redeem</h2>
+  <p>Tu będzie wymiana PTS na nagrody.</p>
+</section>
+
+<!-- CODES -->
+<section id="codes">
+  <h2>🔐 My Codes</h2>
+  <p>W przyszłości: system kodów do wpisywania.</p>
+</section>
+
+<script>
+let pts = Number(localStorage.getItem("PTS")) || 0;
+document.getElementById("ptsDisplay").textContent = pts;
+
+function addPTS(amount) {
+  pts += amount;
+  localStorage.setItem("PTS", pts);
+  document.getElementById("ptsDisplay").textContent = pts;
+}
+
+function openTab(tabName){
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(tabName).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+}
+
+// otwieramy pierwszą zakładkę
+openTab('daily');
+
+// DAILY REWARD
+function dailyReward(){
+  const today = new Date().toDateString();
+  const last = localStorage.getItem("lastDaily");
+
+  if(last === today){
+    document.getElementById("dailyInfo").textContent = "⚠️ Odebrałeś już dzisiaj!";
+  } else {
+    addPTS(50); // <<< TUTAJ USTALAMY ILE ZA DAILY
+    localStorage.setItem("lastDaily", today);
+    document.getElementById("dailyInfo").textContent = "🎉 Odebrałeś 50 PTS!";
+  }
+}
+</script>
+
+</body>
+</html>
