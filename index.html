@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>PTS System</title>
@@ -65,12 +65,11 @@
   #dailyTable td {
     background: #222;
   }
-
 </style>
 </head>
 <body>
 
-<div class="pts">💰 Twoje PTS: <span id="ptsDisplay">0</span></div>
+<div class="pts">💰 Your PTS: <span id="ptsDisplay">0</span></div>
 
 <nav>
   <button onclick="openTab('daily')">Daily Rewards</button>
@@ -87,15 +86,15 @@
   <!-- Claim Reward Button -->
   <button id="claimBtn">Claim Reward</button>
 
-  <!-- Panel nagrody -->
+  <!-- Panel reward -->
   <div id="rewardPanel">
-    <p id="dailyInfo" style="color:#ff8a00;">🎉 Odebrałeś 50 PTS!</p>
+    <p id="dailyInfo" style="color:#ff8a00;">🎉 You received 50 PTS!</p>
   </div>
 
   <!-- Show Daily Rewards Button -->
   <button id="showTableBtn">Show Daily Rewards</button>
 
-  <!-- Tabela nagród -->
+  <!-- Table -->
   <table id="dailyTable">
     <thead>
       <tr>
@@ -116,29 +115,29 @@
 <!-- MISSIONS -->
 <section id="missions">
   <h2 style="text-align:center; font-size:28px;">🚀 Missions</h2>
-  <p>Wkrótce dodamy misje do wykonania!</p>
+  <p>Coming soon: missions to complete!</p>
 </section>
 
 <!-- QUIZ -->
 <section id="quiz">
   <h2 style="text-align:center; font-size:28px;">🧠 Quiz</h2>
-  <p>Wkrótce dodamy pytania quizowe!</p>
+  <p>Coming soon: quiz questions!</p>
 </section>
 
 <!-- REDEEM -->
 <section id="redeem">
   <h2 style="text-align:center; font-size:28px;">🎟️ Redeem</h2>
-  <p>Tu będzie wymiana PTS na nagrody.</p>
+  <p>Here you can exchange PTS for rewards.</p>
 </section>
 
 <!-- CODES -->
 <section id="codes">
   <h2 style="text-align:center; font-size:28px;">🔐 My Codes</h2>
-  <p>W przyszłości: system kodów do wpisywania.</p>
+  <p>Coming soon: code redemption system.</p>
 </section>
 
 <script>
-/* --- PTS i zapis --- */
+/* --- PTS --- */
 let pts = Number(localStorage.getItem("PTS")) || 0;
 document.getElementById("ptsDisplay").textContent = pts;
 
@@ -148,16 +147,16 @@ function addPTS(amount){
   document.getElementById("ptsDisplay").textContent = pts;
 }
 
-/* --- Zakładki --- */
+/* --- Tabs --- */
 function openTab(tabName){
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
   document.getElementById(tabName).classList.add("active");
   document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
   event.target.classList.add("active");
 }
-openTab('daily'); // domyślna zakładka
+openTab('daily'); // default tab
 
-/* --- Daily Rewards logic --- */
+/* --- Daily Reward --- */
 let rewardClicks = Number(localStorage.getItem("rewardClicks")) || 0;
 const claimBtn = document.getElementById("claimBtn");
 const rewardPanel = document.getElementById("rewardPanel");
@@ -176,11 +175,11 @@ claimBtn.addEventListener("click", ()=>{
     const today = new Date().toDateString();
     const last = localStorage.getItem("lastDaily");
     if(last !== today){
-      addPTS(50); // codzienna nagroda
+      addPTS(50); // daily reward
       localStorage.setItem("lastDaily", today);
-      document.getElementById("dailyInfo").textContent = "🎉 Odebrałeś 50 PTS!";
+      document.getElementById("dailyInfo").textContent = "🎉 You received 50 PTS!";
     } else {
-      document.getElementById("dailyInfo").textContent = "⚠️ Dzisiaj już odebrałeś nagrodę!";
+      document.getElementById("dailyInfo").textContent = "⚠️ You already claimed today!";
     }
 
     if(rewardClicks === 2) claimBtn.style.display = "none";
