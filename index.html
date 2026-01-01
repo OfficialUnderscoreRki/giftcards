@@ -15,9 +15,28 @@
   section { display:none; padding:20px; }
   section.active { display:block; }
 
-  /* Daily Rewards GUI */
+  /* Container for Daily Rewards: text left, buttons right */
+  .dailyContainer { display:flex; justify-content:space-between; align-items:flex-start; max-width:800px; margin:0 auto; }
+  .dailyText { flex:1; padding-right:20px; }
+  .dailyButtons { display:flex; flex-direction:column; gap:15px; }
+
+  #claimBtn, #showTableBtn {
+    font-size:20px;
+    padding:12px 25px;
+    cursor:pointer;
+    background: linear-gradient(135deg, #ff8a00, #e52e71);
+    border:none;
+    color:white;
+    border-radius:15px;
+    box-shadow:0 6px 12px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    width:200px;
+    text-align:center;
+  }
+  #claimBtn:active, #showTableBtn:active { transform: scale(0.95); }
+
   #rewardPanel { 
-    margin:20px auto 0;
+    margin:20px 0;
     max-width:300px;
     background: linear-gradient(135deg, #222, #333);
     border-radius:20px;
@@ -31,24 +50,9 @@
     font-size:20px;
   }
 
-  #claimBtn, #showTableBtn {
-    font-size:20px;
-    padding:12px 25px;
-    cursor:pointer;
-    background: linear-gradient(135deg, #ff8a00, #e52e71);
-    border:none;
-    color:white;
-    border-radius:15px;
-    box-shadow:0 6px 12px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-    display:block;
-    margin: 15px auto 0;
-  }
-  #claimBtn:active, #showTableBtn:active { transform: scale(0.95); }
-
   #dailyTable {
     max-width:350px;
-    margin:20px auto;
+    margin:20px 0;
     border-collapse: collapse;
     display:none;
     text-align:center;
@@ -76,27 +80,32 @@
 <!-- DAILY REWARDS -->
 <section id="daily">
   <h2 style="text-align:center; font-size:32px; margin-bottom:20px;">🎁 Daily Rewards</h2>
-  
-  <button id="claimBtn">Claim Reward</button>
 
-  <div id="rewardPanel">
-    <p id="dailyInfo" style="color:#ff8a00;">🎉 You received 50 PTS!</p>
+  <div class="dailyContainer">
+    <div class="dailyText">
+      <p>Claim your daily reward and see the rewards table!</p>
+      <div id="rewardPanel">
+        <p id="dailyInfo" style="color:#ff8a00;">🎉 You received 50 PTS!</p>
+      </div>
+      <table id="dailyTable">
+        <thead>
+          <tr><th>Day</th><th>PTS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Day 1</td><td>50</td></tr>
+          <tr><td>Day 2</td><td>60</td></tr>
+          <tr><td>Day 3</td><td>70</td></tr>
+          <tr><td>Day 4</td><td>80</td></tr>
+          <tr><td>Day 5</td><td>100</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="dailyButtons">
+      <button id="claimBtn">Claim Reward</button>
+      <button id="showTableBtn">Show Daily Rewards</button>
+    </div>
   </div>
-
-  <button id="showTableBtn">Show Daily Rewards</button>
-
-  <table id="dailyTable">
-    <thead>
-      <tr><th>Day</th><th>PTS</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Day 1</td><td>50</td></tr>
-      <tr><td>Day 2</td><td>60</td></tr>
-      <tr><td>Day 3</td><td>70</td></tr>
-      <tr><td>Day 4</td><td>80</td></tr>
-      <tr><td>Day 5</td><td>100</td></tr>
-    </tbody>
-  </table>
 </section>
 
 <!-- MISSIONS -->
