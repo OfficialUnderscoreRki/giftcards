@@ -7,7 +7,7 @@
   /* --- Ogólny wygląd --- */
   body { background:#111; color:white; font-family:Arial, sans-serif; margin:0; }
   .pts { background:#333; padding:15px; text-align:center; font-size:20px; margin-bottom:10px; border-bottom: 2px solid #e52e71; }
-  
+
   /* --- Menu zakładek --- */
   nav { display:flex; background:#222; }
   nav button { flex:1; padding:15px; background:#222; color:white; border:none; cursor:pointer; font-size:16px; transition:0.2s; }
@@ -17,30 +17,36 @@
   /* --- Sekcje --- */
   section { display:none; padding:20px; }
   section.active { display:block; }
-  
+
   /* --- Daily Rewards panel --- */
   #rewardPanel { 
-    margin-top: 20px; 
-    background: #222; 
-    border-radius: 10px; 
-    padding: 15px; 
-    display: none; 
+    margin:30px auto 0;
+    max-width:300px;
+    background: linear-gradient(135deg, #222, #333);
+    border-radius:20px;
+    padding:20px;
     text-align:center;
-    box-shadow: 0 0 15px #e52e71;
+    display:none;
+    box-shadow:0 0 20px #e52e71;
+    transform: translateY(-20px);
+    opacity:0;
+    transition: all 0.5s ease;
     font-size:20px;
   }
 
   /* --- Strzałka przycisk --- */
   #toggleReward {
-    font-size: 24px; 
-    padding: 10px 20px; 
-    margin-top: 10px; 
-    cursor: pointer; 
-    background: linear-gradient(90deg, #ff8a00, #e52e71); 
-    border: none; 
-    color: white; 
-    border-radius: 8px;
-    transition: transform 0.2s;
+    font-size:36px;
+    padding:15px 30px;
+    cursor:pointer;
+    background: linear-gradient(135deg, #ff8a00, #e52e71);
+    border:none;
+    color:white;
+    border-radius:50px;
+    box-shadow:0 8px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    display:block;
+    margin: 20px auto 0;
   }
 
   #toggleReward:active { transform: scale(0.95); }
@@ -49,8 +55,10 @@
 </head>
 <body>
 
+<!-- Licznik PTS -->
 <div class="pts">💰 Twoje PTS: <span id="ptsDisplay">0</span></div>
 
+<!-- Menu zakładek -->
 <nav>
   <button onclick="openTab('daily')">Daily Rewards</button>
   <button onclick="openTab('missions')">Missions</button>
@@ -61,35 +69,37 @@
 
 <!-- DAILY REWARDS -->
 <section id="daily">
-  <h2>🎁 Daily Rewards</h2>
-  <p>Kliknij strzałkę, aby zobaczyć swoją nagrodę!</p>
-  <button id="toggleReward">⬇️ Pokaż nagrodę</button>
+  <h2 style="text-align:center; font-size:32px; margin-bottom:20px;">🎁 Daily Rewards</h2>
+  <p style="text-align:center; font-size:18px;">Kliknij strzałkę, aby odebrać nagrodę!</p>
+
+  <button id="toggleReward">⬇️</button>
+
   <div id="rewardPanel">
-    <p id="dailyInfo">Twój PTS: +50!</p>
+    <p id="dailyInfo" style="color:#ff8a00;">🎉 Odebrałeś 50 PTS!</p>
   </div>
 </section>
 
 <!-- MISSIONS -->
 <section id="missions">
-  <h2>🚀 Missions</h2>
-  <p>Wkrótce misje... (podamy szczegóły)</p>
+  <h2 style="text-align:center; font-size:28px;">🚀 Missions</h2>
+  <p>Wkrótce dodamy misje do wykonania!</p>
 </section>
 
 <!-- QUIZ -->
 <section id="quiz">
-  <h2>🧠 Quiz</h2>
-  <p>Wkrótce dodamy pytania, które podasz.</p>
+  <h2 style="text-align:center; font-size:28px;">🧠 Quiz</h2>
+  <p>Wkrótce dodamy pytania quizowe!</p>
 </section>
 
 <!-- REDEEM -->
 <section id="redeem">
-  <h2>🎟️ Redeem</h2>
+  <h2 style="text-align:center; font-size:28px;">🎟️ Redeem</h2>
   <p>Tu będzie wymiana PTS na nagrody.</p>
 </section>
 
 <!-- CODES -->
 <section id="codes">
-  <h2>🔐 My Codes</h2>
+  <h2 style="text-align:center; font-size:28px;">🔐 My Codes</h2>
   <p>W przyszłości: system kodów do wpisywania.</p>
 </section>
 
@@ -112,41 +122,44 @@ function openTab(tabName){
   event.target.classList.add("active");
 }
 
-/* --- Otwieramy pierwszą zakładkę --- */
+// otwieramy pierwszą zakładkę
 openTab('daily');
 
-/* --- Daily Reward (przycisk strzałki + pokaz panelu 2x) --- */
+/* --- Daily Reward GUI --- */
 let rewardClicks = Number(localStorage.getItem("rewardClicks")) || 0;
 const toggleBtn = document.getElementById("toggleReward");
 const rewardPanel = document.getElementById("rewardPanel");
 
 toggleBtn.addEventListener("click", () => {
   if(rewardClicks < 2){
-    // pokazujemy panel
+    // animacja panelu
     rewardPanel.style.display = "block";
-    rewardPanel.style.transform = "scale(0.8)";
-    setTimeout(()=>rewardPanel.style.transform = "scale(1)",50);
+    setTimeout(()=>{
+      rewardPanel.style.transform = "translateY(0)";
+      rewardPanel.style.opacity = "1";
+    },50);
+
+    // obrót strzałki
+    toggleBtn.style.transform = "rotate(180deg)";
 
     rewardClicks++;
     localStorage.setItem("rewardClicks", rewardClicks);
 
-    // dodajemy codzienną nagrodę przy pierwszym kliknięciu dziennie
+    // codzienna nagroda
     const today = new Date().toDateString();
     const last = localStorage.getItem("lastDaily");
     if(last !== today){
-      addPTS(50); // 50 PTS za daily
+      addPTS(50); // 50 PTS
       localStorage.setItem("lastDaily", today);
       document.getElementById("dailyInfo").textContent = "🎉 Odebrałeś 50 PTS!";
     } else {
       document.getElementById("dailyInfo").textContent = "⚠️ Dzisiaj już odebrałeś nagrodę!";
     }
 
-    if(rewardClicks === 2) toggleBtn.style.display = "none"; // po 2 kliknięciach znika
+    if(rewardClicks === 2) toggleBtn.style.display = "none";
   }
 });
 </script>
 
 </body>
 </html>
-
-
