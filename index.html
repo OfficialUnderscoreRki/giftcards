@@ -4,23 +4,20 @@
 <meta charset="UTF-8">
 <title>PTS System</title>
 <style>
-  /* --- Ogólny wygląd --- */
   body { background:#111; color:white; font-family:Arial, sans-serif; margin:0; }
   .pts { background:#333; padding:15px; text-align:center; font-size:20px; margin-bottom:10px; border-bottom: 2px solid #e52e71; }
 
-  /* --- Menu zakładek --- */
   nav { display:flex; background:#222; }
   nav button { flex:1; padding:15px; background:#222; color:white; border:none; cursor:pointer; font-size:16px; transition:0.2s; }
   nav button:hover { background:#444; }
   nav button.active { background:#e52e71; color:white; font-weight:bold; }
 
-  /* --- Sekcje --- */
   section { display:none; padding:20px; }
   section.active { display:block; }
 
-  /* --- Daily Rewards panel --- */
+  /* Daily Rewards GUI */
   #rewardPanel { 
-    margin:30px auto 0;
+    margin:20px auto 0;
     max-width:300px;
     background: linear-gradient(135deg, #222, #333);
     border-radius:20px;
@@ -34,31 +31,47 @@
     font-size:20px;
   }
 
-  /* --- Strzałka przycisk --- */
-  #toggleReward {
-    font-size:36px;
-    padding:15px 30px;
+  #claimBtn, #showTableBtn {
+    font-size:20px;
+    padding:12px 25px;
     cursor:pointer;
     background: linear-gradient(135deg, #ff8a00, #e52e71);
     border:none;
     color:white;
-    border-radius:50px;
-    box-shadow:0 8px 15px rgba(0,0,0,0.3);
+    border-radius:15px;
+    box-shadow:0 6px 12px rgba(0,0,0,0.3);
     transition: all 0.3s ease;
     display:block;
-    margin: 20px auto 0;
+    margin: 15px auto 0;
   }
+  #claimBtn:active, #showTableBtn:active { transform: scale(0.95); }
 
-  #toggleReward:active { transform: scale(0.95); }
+  /* Daily rewards table */
+  #dailyTable {
+    max-width:350px;
+    margin:20px auto;
+    border-collapse: collapse;
+    display:none;
+    text-align:center;
+  }
+  #dailyTable th, #dailyTable td {
+    border:1px solid #e52e71;
+    padding:8px 12px;
+  }
+  #dailyTable th {
+    background: #e52e71;
+    color:white;
+  }
+  #dailyTable td {
+    background: #222;
+  }
 
 </style>
 </head>
 <body>
 
-<!-- Licznik PTS -->
 <div class="pts">💰 Twoje PTS: <span id="ptsDisplay">0</span></div>
 
-<!-- Menu zakładek -->
 <nav>
   <button onclick="openTab('daily')">Daily Rewards</button>
   <button onclick="openTab('missions')">Missions</button>
@@ -70,13 +83,34 @@
 <!-- DAILY REWARDS -->
 <section id="daily">
   <h2 style="text-align:center; font-size:32px; margin-bottom:20px;">🎁 Daily Rewards</h2>
-  <p style="text-align:center; font-size:18px;">Kliknij strzałkę, aby odebrać nagrodę!</p>
+  
+  <!-- Claim Reward Button -->
+  <button id="claimBtn">Claim Reward</button>
 
-  <button id="toggleReward">⬇️</button>
-
+  <!-- Panel nagrody -->
   <div id="rewardPanel">
     <p id="dailyInfo" style="color:#ff8a00;">🎉 Odebrałeś 50 PTS!</p>
   </div>
+
+  <!-- Show Daily Rewards Button -->
+  <button id="showTableBtn">Show Daily Rewards</button>
+
+  <!-- Tabela nagród -->
+  <table id="dailyTable">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>PTS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Day 1</td><td>50</td></tr>
+      <tr><td>Day 2</td><td>60</td></tr>
+      <tr><td>Day 3</td><td>70</td></tr>
+      <tr><td>Day 4</td><td>80</td></tr>
+      <tr><td>Day 5</td><td>100</td></tr>
+    </tbody>
+  </table>
 </section>
 
 <!-- MISSIONS -->
@@ -121,42 +155,47 @@ function openTab(tabName){
   document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
   event.target.classList.add("active");
 }
+openTab('daily'); // domyślna zakładka
 
-// otwieramy pierwszą zakładkę
-openTab('daily');
-
-/* --- Daily Reward GUI --- */
+/* --- Daily Rewards logic --- */
 let rewardClicks = Number(localStorage.getItem("rewardClicks")) || 0;
-const toggleBtn = document.getElementById("toggleReward");
+const claimBtn = document.getElementById("claimBtn");
 const rewardPanel = document.getElementById("rewardPanel");
 
-toggleBtn.addEventListener("click", () => {
+claimBtn.addEventListener("click", ()=>{
   if(rewardClicks < 2){
-    // animacja panelu
     rewardPanel.style.display = "block";
     setTimeout(()=>{
       rewardPanel.style.transform = "translateY(0)";
       rewardPanel.style.opacity = "1";
     },50);
 
-    // obrót strzałki
-    toggleBtn.style.transform = "rotate(180deg)";
-
     rewardClicks++;
     localStorage.setItem("rewardClicks", rewardClicks);
 
-    // codzienna nagroda
     const today = new Date().toDateString();
     const last = localStorage.getItem("lastDaily");
     if(last !== today){
-      addPTS(50); // 50 PTS
+      addPTS(50); // codzienna nagroda
       localStorage.setItem("lastDaily", today);
       document.getElementById("dailyInfo").textContent = "🎉 Odebrałeś 50 PTS!";
     } else {
       document.getElementById("dailyInfo").textContent = "⚠️ Dzisiaj już odebrałeś nagrodę!";
     }
 
-    if(rewardClicks === 2) toggleBtn.style.display = "none";
+    if(rewardClicks === 2) claimBtn.style.display = "none";
+  }
+});
+
+/* --- Show Daily Rewards Table --- */
+const showTableBtn = document.getElementById("showTableBtn");
+const dailyTable = document.getElementById("dailyTable");
+
+showTableBtn.addEventListener("click", ()=>{
+  if(dailyTable.style.display === "none" || dailyTable.style.display === ""){
+    dailyTable.style.display = "table";
+  } else {
+    dailyTable.style.display = "none";
   }
 });
 </script>
